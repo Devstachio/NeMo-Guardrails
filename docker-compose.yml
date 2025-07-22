@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  nemo-guardrails:
+    build: .
+    ports:
+      - "8000:8000"  # Guardrails server
+      - "8001:8001"  # Actions server
+    volumes:
+      - ./configs:/app/configs  # Mount your config directory
+      - ./data:/app/data        # Mount data directory (optional)
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: nemoguardrails server --config=/app/configs --port=8000
+
+  # Optional: Actions server as separate service
+  actions-server:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: nemoguardrails actions-server --port=8001
+    profiles:
+      - actions  # Only start with: docker-compose --profile actions up

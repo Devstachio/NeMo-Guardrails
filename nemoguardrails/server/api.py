@@ -93,15 +93,22 @@ async def lifespan(app: FastAPI):
 
     if not app.disable_chat_ui:
         FRONTEND_DIR = utils.get_chat_ui_data_path("frontend")
-
-        app.mount(
-            "/",
-            StaticFiles(
-                directory=FRONTEND_DIR,
-                html=True,
-            ),
-            name="chat",
-        )
+        
+        # Only mount the chat UI if the frontend directory exists
+        if FRONTEND_DIR:
+            app.mount(
+                "/",
+                StaticFiles(
+                    directory=FRONTEND_DIR,
+                    html=True,
+                ),
+                name="chat",
+            )
+        else:
+            # Chat UI not available, provide a simple API endpoint
+            @app.get("/")
+            async def root_handler():
+                return {"status": "ok", "message": "NeMo Guardrails API Server - Chat UI not available"}
     else:
 
         @app.get("/")
@@ -151,8 +158,8 @@ if ENABLE_CORS:
 
 app.default_config_id = None
 
-# By default, we use the rails in the examples folder
-app.rails_config_path = utils.get_examples_data_path("bots")
+# By default, we set no default path since examples were removed
+app.rails_config_path = None
 
 # Weather the chat UI is enabled or not.
 app.disable_chat_ui = False

@@ -27,13 +27,11 @@ from nemoguardrails.actions_server import actions_server
 from nemoguardrails.cli.chat import run_chat
 from nemoguardrails.cli.migration import migrate
 from nemoguardrails.cli.providers import _list_providers, select_provider_with_type
-from nemoguardrails.eval import cli
 from nemoguardrails.logging.verbose import set_verbose
 from nemoguardrails.utils import init_random_seed
 
 app = typer.Typer()
 
-app.add_typer(cli.app, name="eval", short_help="Evaluation a guardrail configuration.")
 app.pretty_exceptions_enable = False
 
 logging.getLogger().setLevel(logging.WARNING)

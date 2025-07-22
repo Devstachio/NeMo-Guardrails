@@ -283,12 +283,23 @@ def get_data_path(package_name: str, file_path: str) -> str:
 
 def get_examples_data_path(file_path: str) -> str:
     """Helper to get the path to the examples data directory."""
-    return get_data_path("nemoguardrails", f"examples/{file_path}")
+    # Since examples directory was removed, return None or a safe default
+    # For backward compatibility, just return a placeholder path
+    try:
+        return get_data_path("nemoguardrails", f"examples/{file_path}")
+    except FileNotFoundError:
+        # Return None when examples don't exist
+        return None
 
 
 def get_chat_ui_data_path(file_path: str) -> str:
     """Helper to get the path to the chat-ui data directory."""
-    return get_data_path("nemoguardrails", f"chat-ui/{file_path}")
+    # Since chat-ui directory was removed, return None or a safe default
+    try:
+        return get_data_path("nemoguardrails", f"chat-ui/{file_path}")
+    except FileNotFoundError:
+        # Return None when chat-ui doesn't exist
+        return None
 
 
 def camelcase_to_snakecase(name: str) -> str:
